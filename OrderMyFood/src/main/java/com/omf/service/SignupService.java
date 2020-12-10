@@ -6,7 +6,7 @@ import com.omf.dto.UserData;
 
 public interface SignupService {
 	
-	ResponseEntity<String> registerCustomer(UserData customerDto) throws Exception;
+	ResponseEntity<String> registerUser(UserData customerDto) throws Exception;
 
 	boolean checkIfUserExist(String email);
 

@@ -27,7 +27,7 @@ public class SignupController {
 	@PostMapping(path = "/customer")
 	public ResponseEntity<String> registerCustomer(@Valid @RequestBody UserData userDto) {
 		try {
-			return signupServiceImpl.registerCustomer(userDto);
+			return signupServiceImpl.registerUser(userDto);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Unable to register the user. Please verify details or try again later!", HttpStatus.BAD_REQUEST);
 		}
@@ -40,7 +40,7 @@ public class SignupController {
 	@PostMapping(path = "/vendor")
 	public ResponseEntity<String> registerVendor(@RequestBody UserData userDto) {
 		try {
-			return signupServiceImpl.registerCustomer(userDto);
+			return signupServiceImpl.registerUser(userDto);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Unable to register the user. Please verify details or try again later!", HttpStatus.BAD_REQUEST);
 		}

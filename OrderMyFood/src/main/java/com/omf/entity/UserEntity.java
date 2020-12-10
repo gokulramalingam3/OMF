@@ -1,5 +1,8 @@
 package com.omf.entity;
 
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,12 +33,24 @@ public class UserEntity {
 	@Column(name = "email_id", length = 50, unique = true)
 	private String emailId;
 	
-	@Column(name = "password", length = 50)
+	@Column(name = "password", length = 100)
 	private String password;
 	
 	@Column(name = "role", length = 10)
 	private String role;
 
+	private static final long OTP_VALID_DURATION = 5 * 60 * 1000;// 5 minutes
+	
+	@Column(name = "one_time_password")
+	private String oneTimePassword;
+
+	@Column(name = "otp_requested_time")
+	private Date otpRequestedTime;
+
+	@JsonIgnore
+	@Column(name="status")
+	private String status;
+	
 	public UserEntity() {
 		/*
 		 * Empty constructor for Hibernate to instantiate object
@@ -91,5 +106,41 @@ public class UserEntity {
 		this.role = role;
 	}
 
+	public String getOneTimePassword() {
+		return oneTimePassword;
+	}
 
+	public void setOneTimePassword(String oneTimePassword) {
+		this.oneTimePassword = oneTimePassword;
+	}
+
+	public Date getOtpRequestedTime() {
+		return otpRequestedTime;
+	}
+
+	public void setOtpRequestedTime(Date otpRequestedTime) {
+		this.otpRequestedTime = otpRequestedTime;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public boolean isOTPRequired() {
+		if (this.getOneTimePassword() == null) {
+			return false;
+		}
+
+		long currentTimeInMillis = System.currentTimeMillis();
+		long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
+		if (otpRequestedTimeInMillis + OTP_VALID_DURATION < currentTimeInMillis) {
+			//OTP expires
+			return false;
+		}
+		return true;
+	}
 }
