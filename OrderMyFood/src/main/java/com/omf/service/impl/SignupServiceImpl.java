@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.omf.dto.OTP;
 import com.omf.dto.UserData;
 import com.omf.entity.UserEntity;
 import com.omf.exception.UserAlreadyExistException;
@@ -26,6 +27,8 @@ import net.bytebuddy.utility.RandomString;
 @Service
 public class SignupServiceImpl implements SignupService {
 	
+	private static final long OTP_VALID_DURATION = 5 * 60 * 1000;   // 5 minutes
+	 
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -79,4 +82,21 @@ public class SignupServiceImpl implements SignupService {
     	emailService.sendSimpleMessage(to, subject, text);     
     }
 
+	public ResponseEntity<String> verifyOtp(OTP otp) {
+		// TODO Auto-generated method stub
+		UserEntity userEntity = userRepository.findByEmailIdIgnoreCase(otp.getEmailId());
+		if(userEntity != null && userEntity.getStatus().equals("created") && userEntity.getOneTimePassword().equals(otp.getOtp())) {
+			long currentTimeInMillis = System.currentTimeMillis();
+			long otpRequestedTimeInMillis = userEntity.getOtpRequestedTime().getTime();
+			if (otpRequestedTimeInMillis + OTP_VALID_DURATION < currentTimeInMillis) {
+				//OTP expires
+				return new ResponseEntity<>("OTP Expired", HttpStatus.OK);
+			} else {
+				userEntity.setStatus("verified");
+				userRepository.save(userEntity);
+				return new ResponseEntity<>("Verified Successfully", HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<>("Verification failed", HttpStatus.METHOD_FAILURE);
+	}
 }

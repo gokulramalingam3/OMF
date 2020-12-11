@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.omf.dto.OTP;
 import com.omf.dto.UserData;
 import com.omf.service.impl.SignupServiceImpl;
 
@@ -44,5 +45,14 @@ public class SignupController {
 		} catch (Exception e) {
 			return new ResponseEntity<>("Unable to register the user. Please verify details or try again later!", HttpStatus.BAD_REQUEST);
 		}
-	}	
+	}
+	
+	/*
+	 *To verify both customer and vendor 
+	 */
+	@CrossOrigin
+	@PostMapping(path = "/verify")
+	public ResponseEntity<String> verify(@RequestBody OTP otp) {
+		return signupServiceImpl.verifyOtp(otp);
+	}
 }
