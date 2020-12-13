@@ -2,7 +2,13 @@ package com.omf.exception;
 
 public class UserAlreadyExistException extends Exception {
 
-    public UserAlreadyExistException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	public UserAlreadyExistException() {
         super();
     }
 

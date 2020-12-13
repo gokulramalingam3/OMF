@@ -17,9 +17,6 @@ public class UserData {
 
     @NotEmpty(message = "Password can not be empty")
     private String password;
-    
-    @NotEmpty(message = "Role can not be empty")
-    private String role;
 
 	public UserData() {
 		 
@@ -55,14 +52,6 @@ public class UserData {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 	
 }

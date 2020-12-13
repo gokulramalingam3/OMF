@@ -14,8 +14,8 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "customer")
-public class UserEntity {
+@Table(name = "vendor")
+public class Vendor {
 
 	@Id
 	@Column(name = "customer_id", length = 30)
@@ -35,9 +35,6 @@ public class UserEntity {
 	
 	@Column(name = "password", length = 100)
 	private String password;
-	
-	@Column(name = "role", length = 10)
-	private String role;
 
 	private static final long OTP_VALID_DURATION = 5 * 60 * 1000;// 5 minutes
 	
@@ -51,7 +48,7 @@ public class UserEntity {
 	@Column(name="status")
 	private String status;
 	
-	public UserEntity() {
+	public Vendor() {
 		/*
 		 * Empty constructor for Hibernate to instantiate object
 		 */
@@ -98,14 +95,6 @@ public class UserEntity {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public String getOneTimePassword() {
 		return oneTimePassword;
 	}
@@ -134,7 +123,6 @@ public class UserEntity {
 		if (this.getOneTimePassword() == null) {
 			return false;
 		}
-
 		long currentTimeInMillis = System.currentTimeMillis();
 		long otpRequestedTimeInMillis = this.otpRequestedTime.getTime();
 		if (otpRequestedTimeInMillis + OTP_VALID_DURATION < currentTimeInMillis) {
