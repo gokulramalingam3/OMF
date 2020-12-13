@@ -7,10 +7,8 @@ import javax.mail.MessagingException;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +29,6 @@ public class SignupServiceImpl implements SignupService {
 	 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Bean
-	PasswordEncoder getEncoder() {
-	    return new BCryptPasswordEncoder(5);
-	}
 	
 	@Autowired
     PasswordEncoder passwordEncoder;
@@ -59,7 +52,7 @@ public class SignupServiceImpl implements SignupService {
         userEntity.setOtpRequestedTime(new Date());
         
         //Sending OTP
-        sendOTPEmail(userEntity, OTP);
+        sendOTPEmail(userEntity);
         userEntity.setStatus("created");
         userRepository.save(userEntity);
 		return new ResponseEntity<>("Registered Successfully", HttpStatus.OK);
@@ -74,11 +67,11 @@ public class SignupServiceImpl implements SignupService {
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
 	}
     
-    public void sendOTPEmail(UserEntity user, String OTP)
+    public void sendOTPEmail(UserEntity user)
             throws UnsupportedEncodingException, MessagingException {
     	String to = user.getEmailId();
     	String subject = "Welcome to OrderMyFood";
-    	String text = "Please enter the following otp to activate your account. OTP: "+OTP;
+    	String text = "Hi "+ user.getFirstName()+ ", Please enter the following otp to activate your account. OTP: "+user.getOneTimePassword();
     	emailService.sendSimpleMessage(to, subject, text);     
     }
 
