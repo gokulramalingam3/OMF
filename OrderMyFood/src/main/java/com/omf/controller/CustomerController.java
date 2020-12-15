@@ -1,13 +1,10 @@
 package com.omf.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +23,12 @@ public class CustomerController {
 	@PostMapping(path = "/login")
 	public Customer loginUser(@RequestBody LoginDto dto) throws Exception {
 		return customerService.loginCustomer(dto);
+	}
+	
+	@PutMapping(path="/update/{customerId}")
+	public Customer updateCustomer(@PathVariable Long  customerId, @RequestBody UserData customer) throws Exception{
+		Customer updatedCustomer = customerService.editCustomerById(customerId,customer);
+		return updatedCustomer;
 	}
 	
 	@GetMapping(path="/{customerId}")

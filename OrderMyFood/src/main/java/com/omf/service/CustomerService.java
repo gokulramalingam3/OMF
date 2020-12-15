@@ -16,6 +16,8 @@ public interface CustomerService
 	
 	public Customer getCustomerById(Long customerId);
 
+	Customer editCustomerById(Long customerId, UserData customer) throws Exception;
+
 
 }
 

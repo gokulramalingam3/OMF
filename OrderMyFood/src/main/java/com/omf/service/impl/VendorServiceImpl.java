@@ -122,4 +122,16 @@ public class VendorServiceImpl implements VendorService {
 		return vendor;
 	}
 
+	@Override
+	public Vendor editVendorById(Long vendorId, UserData vendorWithUpdate) throws Exception {
+		Vendor vendor = vendorRepository.findById(vendorId).orElse(new Vendor());
+		if(vendor.getCustomerId() != null) {
+			BeanUtils.copyProperties(vendorWithUpdate, vendor);
+			return vendorRepository.save(vendor);
+		} else {
+			// User not found
+			throw new Exception("Vendor Not Found");
+		}
+	}
+
 }

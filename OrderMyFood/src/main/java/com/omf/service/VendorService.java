@@ -21,4 +21,6 @@ public interface VendorService {
 
 	public Vendor getVendorById(Long vendorId);
 
+	Vendor editVendorById(Long vendorId, UserData vendor) throws Exception;
+
 }

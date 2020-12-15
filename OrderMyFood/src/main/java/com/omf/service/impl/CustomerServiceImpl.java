@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.omf.dto.LoginDto;
 import com.omf.dto.OTP;
@@ -116,5 +118,16 @@ public class CustomerServiceImpl implements CustomerService
 		return  customer;
 	}
 
-	
+	// Edit Specific customer By Id
+	@Override
+	public Customer editCustomerById(@PathVariable Long customerId, @RequestBody UserData Updatedcustomer) throws Exception {
+		Customer cust = customerRepository.findById(customerId).orElse(new Customer());
+		if(cust.getCustomerId() != null) {
+			BeanUtils.copyProperties(Updatedcustomer, cust);
+			return customerRepository.save(cust);
+		} else {
+			// User not found
+			throw new Exception("Customer Not Found");
+		}		
+	}
 }
