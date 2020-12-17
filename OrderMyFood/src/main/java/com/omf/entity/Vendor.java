@@ -3,25 +3,29 @@ package com.omf.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "vendor")
 public class Vendor {
 
 	@Id
-	@Column(name = "customer_id", length = 30)
+	@Column(name = "vendor_id", length = 30)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
-	private Long customerId;
+	private Long vendorId;
 
 	@Size(min=2, message="Name should have atleast 2 characters")
 	@Column(name = "first_name", length = 30)
@@ -47,6 +51,10 @@ public class Vendor {
 	@JsonIgnore
 	@Column(name="status")
 	private String status;
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vendor")
+	@JsonManagedReference
+	private VendorAddress vendorAddress;
 	
 	public Vendor() {
 		/*
@@ -79,12 +87,12 @@ public class Vendor {
 	}
 
 	
-	public Long getCustomerId() {
-		return customerId;
+	public Long getVendorId() {
+		return vendorId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
 
 	public String getPassword() {
@@ -130,5 +138,13 @@ public class Vendor {
 			return false;
 		}
 		return true;
+	}
+
+	public VendorAddress getVendorAddress() {
+		return vendorAddress;
+	}
+
+	public void setVendorAddress(VendorAddress vendorAddress) {
+		this.vendorAddress = vendorAddress;
 	}
 }
