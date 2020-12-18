@@ -20,7 +20,7 @@ public class FoodItems {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int id;
+	private Long id;
 
 	@Column(name = "name", length = 20)
 	private String name;
@@ -42,11 +42,11 @@ public class FoodItems {
 		 */
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

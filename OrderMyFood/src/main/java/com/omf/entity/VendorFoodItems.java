@@ -36,7 +36,7 @@ public class VendorFoodItems {
 
 	private double price;
 
-	private int count;
+	private Long count;
 
 	public VendorFoodItems() {
 		/*
@@ -76,11 +76,11 @@ public class VendorFoodItems {
 		this.price = price;
 	}
 
-	public int getCount() {
+	public Long getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(Long count) {
 		this.count = count;
 	}
 

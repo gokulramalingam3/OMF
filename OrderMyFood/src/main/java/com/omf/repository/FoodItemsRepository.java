@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.omf.entity.FoodItems;
 
-public interface FoodItemsRepository extends CrudRepository<FoodItems, Integer> {
+public interface FoodItemsRepository extends CrudRepository<FoodItems, Long> {
 
 	public FoodItems findByName(String name);
 
