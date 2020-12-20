@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name = "food_order")
+@Table(name = "order_food")
 public class Order {
 
 	@Id

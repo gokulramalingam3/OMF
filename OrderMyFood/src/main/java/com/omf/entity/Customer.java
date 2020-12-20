@@ -3,13 +3,18 @@ package com.omf.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "customer")
@@ -46,6 +51,10 @@ public class Customer {
 	
 	@Column(name = "reset_password_token")
     private String resetPasswordToken;
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "customer")
+	@JsonManagedReference
+	private CustomerAddress customerAddress;
 	
 	public Customer() {
 		/*
@@ -138,5 +147,13 @@ public class Customer {
 
 	public void setResetPasswordToken(String resetPasswordToken) {
 		this.resetPasswordToken = resetPasswordToken;
+	}
+
+	public CustomerAddress getCustomerAddress() {
+		return customerAddress;
+	}
+
+	public void setCustomerAddress(CustomerAddress customerAddress) {
+		this.customerAddress = customerAddress;
 	}
 }
