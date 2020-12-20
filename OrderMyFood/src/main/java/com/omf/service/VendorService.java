@@ -26,7 +26,7 @@ public interface VendorService {
 
 	public Vendor getVendorById(Long vendorId);
 
-	Vendor editVendorById(Long vendorId, UserData vendor) throws Exception;
+	Vendor editVendorById(Long vendorId, Vendor vendor) throws Exception;
 
 	ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException;
 

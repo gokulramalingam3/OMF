@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.omf.dto.LoginDto;
-import com.omf.dto.UserData;
 import com.omf.entity.Vendor;
 import com.omf.service.VendorService;
 
@@ -26,7 +25,7 @@ public class VendorController {
 	}
 	
 	@PutMapping(path="/update/{vendorId}")
-	public Vendor updateVendor(@PathVariable Long  vendorId, @RequestBody UserData vendor) throws Exception{
+	public Vendor updateVendor(@PathVariable Long  vendorId, @RequestBody Vendor vendor) throws Exception{
 		Vendor updatedVendor = vendorService.editVendorById(vendorId,vendor);
 		return updatedVendor;
 	}

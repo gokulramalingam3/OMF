@@ -21,7 +21,7 @@ public interface CustomerService {
 
 	public Customer getCustomerById(Long customerId);
 
-	Customer editCustomerById(Long customerId, UserData customer) throws Exception;
+	Customer editCustomerById(Long customerId, Customer customer) throws Exception;
 
 	ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto)
 			throws UserNotFoundException;

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.omf.dto.LoginDto;
-import com.omf.dto.UserData;
 import com.omf.entity.Customer;
 import com.omf.service.CustomerService;
 
@@ -26,7 +25,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping(path="/update/{customerId}")
-	public Customer updateCustomer(@PathVariable Long  customerId, @RequestBody UserData customer) throws Exception{
+	public Customer updateCustomer(@PathVariable Long  customerId, @RequestBody Customer customer) throws Exception{
 		Customer updatedCustomer = customerService.editCustomerById(customerId,customer);
 		return updatedCustomer;
 	}

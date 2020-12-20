@@ -131,7 +131,7 @@ public class CustomerServiceImpl implements CustomerService
 
 	// Edit Specific customer By Id
 	@Override
-	public Customer editCustomerById(@PathVariable Long customerId, @RequestBody UserData Updatedcustomer) throws Exception {
+	public Customer editCustomerById(@PathVariable Long customerId, @RequestBody Customer Updatedcustomer) throws Exception {
 		Customer cust = customerRepository.findById(customerId).orElse(new Customer());
 		if(cust.getCustomerId() != null) {
 			BeanUtils.copyProperties(Updatedcustomer, cust);
