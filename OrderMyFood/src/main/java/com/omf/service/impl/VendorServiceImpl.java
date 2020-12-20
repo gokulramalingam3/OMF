@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.omf.dto.ForgotDTO;
 import com.omf.dto.LoginDto;
 import com.omf.dto.OTP;
+import com.omf.dto.ResetPasswordDTO;
 import com.omf.dto.UserData;
 import com.omf.entity.Vendor;
 import com.omf.exception.UserAlreadyExistException;
+import com.omf.exception.UserNotFoundException;
 import com.omf.repository.VendorRepository;
 import com.omf.service.EmailService;
 import com.omf.service.VendorService;
+import com.omf.utils.Utility;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -33,7 +38,7 @@ public class VendorServiceImpl implements VendorService {
 	private VendorRepository vendorRepository;
 
 	@Autowired
-    PasswordEncoder passcodeEncoder;
+    PasswordEncoder passwordEncoder;
 	
 	@Autowired
     EmailService emailService;
@@ -65,7 +70,7 @@ public class VendorServiceImpl implements VendorService {
     }
 	
 	private void encodePassword(Vendor vendor, UserData user) {
-		vendor.setPassword(passcodeEncoder.encode(user.getPassword()));
+		vendor.setPassword(passwordEncoder.encode(user.getPassword()));
 	}
 	
 	public void sendOTPEmail(Vendor user)
@@ -103,7 +108,7 @@ public class VendorServiceImpl implements VendorService {
 		} else if (!vendor.getStatus().equals("verified")) {
 			// User Not verified
 			throw new Exception("User Not Verified");
-		} else if (passcodeEncoder.matches(dto.getPassword(), vendor.getPassword())) {
+		} else if (passwordEncoder.matches(dto.getPassword(), vendor.getPassword())) {
 			// User logged in
 			vendor.setPassword("");
 			return vendor;
@@ -134,4 +139,53 @@ public class VendorServiceImpl implements VendorService {
 		}
 	}
 
+	@Override
+	public ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException {
+		String email = forgotDto.getEmailId();
+		String token = RandomString.make(30);
+		Vendor vendor = vendorRepository.findByEmailIdIgnoreCase(email);
+        if (vendor != null) {
+            vendor.setResetPasswordToken(token);
+            vendorRepository.save(vendor);
+        } else {
+            throw new UserNotFoundException("Could not find any vendor with the email " + email);
+        }
+		sendResetTokenEmail(Utility.getSiteURL(httpServletRequest), token, vendor);
+		return new ResponseEntity<>("Email sent Successfully", HttpStatus.OK);
+	}
+	
+	private void sendResetTokenEmail(String contextPath, String token, Vendor vendor) {
+		String url = contextPath + "/vendor/reset_password?token=" + token;
+		String message = "<p>Hello,</p>"
+        + "<p>You have requested to reset your password.</p>"
+        + "<p>Click the link below to change your password:</p>"
+        + "<p><a href=\"" + url + "\">Change my password</a></p>"
+        + "<br>"
+        + "<p>Ignore this email if you do remember your password, "
+        + "or you have not made the request.</p>";
+		emailService.sendSimpleMessage(vendor.getEmailId(), "Reset Password", message);  
+	}
+
+	@Override
+	public ResponseEntity<String> processResetPassword(String token, ResetPasswordDTO resetPasswordDTO) {
+	    String password = resetPasswordDTO.getPassword();
+	    Vendor vendor = getByResetPasswordToken(token);
+	    if (vendor == null) {
+	    	return new ResponseEntity<>("Invalid Token", HttpStatus.OK);
+	    } else {           
+	        updatePassword(vendor, password);
+	        return new ResponseEntity<>("You have successfully changed your password.", HttpStatus.OK);
+	    }
+	}
+	
+	public Vendor getByResetPasswordToken(String token) {
+		return vendorRepository.findByResetPasswordToken(token);
+	}
+	
+	public void updatePassword(Vendor vendor, String newPassword) {
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		vendor.setPassword(encodedPassword);
+		vendor.setResetPasswordToken(null);
+		vendorRepository.save(vendor);
+	}
 }

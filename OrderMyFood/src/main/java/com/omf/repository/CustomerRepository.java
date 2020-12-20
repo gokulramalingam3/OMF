@@ -7,4 +7,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	Customer findByEmailIdIgnoreCase(String emailId);
 	
+	public Customer findByResetPasswordToken(String token);
 }

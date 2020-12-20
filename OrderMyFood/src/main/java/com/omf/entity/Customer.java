@@ -44,6 +44,9 @@ public class Customer {
 	@Column(name="status")
 	private String status;
 	
+	@Column(name = "reset_password_token")
+    private String resetPasswordToken;
+	
 	public Customer() {
 		/*
 		 * Empty constructor for Hibernate to instantiate object
@@ -127,5 +130,13 @@ public class Customer {
 			return false;
 		}
 		return true;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 }

@@ -49,6 +49,9 @@ public class Vendor {
 	@Column(name="status")
 	private String status;
 	
+	@Column(name = "reset_password_token")
+    private String resetPasswordToken;
+	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vendor")
 	@JsonManagedReference
 	private VendorAddress vendorAddress;
@@ -143,5 +146,13 @@ public class Vendor {
 
 	public void setVendorAddress(VendorAddress vendorAddress) {
 		this.vendorAddress = vendorAddress;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 }

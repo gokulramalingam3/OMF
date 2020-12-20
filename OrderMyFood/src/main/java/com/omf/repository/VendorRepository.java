@@ -10,5 +10,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
 	Vendor findByEmailIdIgnoreCase(String emailId);
 	
 	List<Vendor> findByVendorAddressCity(String city);
+
+	Vendor findByResetPasswordToken(String token);
 	
 }
