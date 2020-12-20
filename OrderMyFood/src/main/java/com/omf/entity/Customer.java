@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -20,7 +18,6 @@ public class Customer {
 	@Id
 	@Column(name = "customer_id", length = 30)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
 	private Long customerId;
 
 	@Size(min=2, message="Name should have atleast 2 characters")
@@ -44,7 +41,6 @@ public class Customer {
 	@Column(name = "otp_requested_time")
 	private Date otpRequestedTime;
 
-	@JsonIgnore
 	@Column(name="status")
 	private String status;
 	

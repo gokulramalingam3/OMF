@@ -14,7 +14,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -24,7 +23,6 @@ public class Vendor {
 	@Id
 	@Column(name = "vendor_id", length = 30)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
 	private Long vendorId;
 
 	@Size(min=2, message="Name should have atleast 2 characters")
@@ -48,7 +46,6 @@ public class Vendor {
 	@Column(name = "otp_requested_time")
 	private Date otpRequestedTime;
 
-	@JsonIgnore
 	@Column(name="status")
 	private String status;
 	
