@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  order-my-food:
+    image: gokulramalingam3/order-my-food:0.0.2-SNAPSHOT
+    #build:
+      #context: .
+      #dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on: # Start the depends_on first
+      - mysql
+    environment:
+      RDS_HOSTNAME: mysql
+      RDS_PORT: 3306
+      RDS_DB_NAME: order_my_food_2
+      RDS_USERNAME: root
+      RDS_PASSWORD: root
+    networks:
+      - order-my-food-network
+
+  mysql:
+    image: mysql:8.0.22
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: order_my_food_2
+    volumes:
+      - mysql-database-data-volume:/var/lib/mysql
+    networks:
+      - order-my-food-network
+  
+# Volumes
+volumes:
+  mysql-database-data-volume:
+
+networks:
+  order-my-food-network:
