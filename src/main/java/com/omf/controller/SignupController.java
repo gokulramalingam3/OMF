@@ -1,5 +1,6 @@
 package com.omf.controller;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,11 @@ public class SignupController {
 	public ResponseEntity<String> registerCustomer(@Valid @RequestBody UserData userDto) {
 		try {
 			return customerService.registerUser(userDto);
+		} catch (ConstraintViolationException e) {
+			return new ResponseEntity<>(e.getConstraintViolations().iterator().next().getMessage(),
+					HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			return new ResponseEntity<>("Unable to register the customer. Please verify details or try again later!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.omf.service;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public interface CustomerService {
 	Customer editCustomerById(Long customerId, Customer customer) throws Exception;
 
 	ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto)
-			throws UserNotFoundException;
+			throws UserNotFoundException, MessagingException;
 
 	ResponseEntity<String> processResetPassword(String token, ResetPasswordDTO resetPasswordDTO);
 }

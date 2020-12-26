@@ -2,6 +2,7 @@ package com.omf.service;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public interface VendorService {
 
 	Vendor editVendorById(Long vendorId, Vendor vendor) throws Exception;
 
-	ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException;
+	ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException, MessagingException;
 
 	ResponseEntity<String> processResetPassword(String token, ResetPasswordDTO resetPasswordDTO);
 

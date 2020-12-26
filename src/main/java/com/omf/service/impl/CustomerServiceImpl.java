@@ -45,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService
     EmailService emailService;
 	
 	@Override
-	public ResponseEntity<String> registerUser(UserData customerDto) throws Exception {
+	public ResponseEntity<String> registerUser(UserData customerDto) throws UserAlreadyExistException, UnsupportedEncodingException, MessagingException {
 		//Let's check if user already registered with us
         if(checkIfUserExist(customerDto.getEmailId())){
             throw new UserAlreadyExistException("User already exists for this email");
@@ -58,11 +58,10 @@ public class CustomerServiceImpl implements CustomerService
         String OTP = RandomString.make(8);         
         customer.setOneTimePassword(OTP);
         customer.setOtpRequestedTime(new Date());
-        
-        //Sending OTP
-        sendOTPEmail(customer);
         customer.setStatus("created");
         customerRepository.save(customer);
+        //Sending OTP
+        sendOTPEmail(customer);
 		return new ResponseEntity<>("Registered Successfully", HttpStatus.OK);
 	}
 	
@@ -77,14 +76,13 @@ public class CustomerServiceImpl implements CustomerService
 	public void sendOTPEmail(Customer user)
             throws UnsupportedEncodingException, MessagingException {
     	String to = user.getEmailId();
-    	String subject = "Welcome to OrderMyFood";
-    	String text = "<p>Hello " + user.getFirstName() + "</p>"
-        + "<p>Please enter the following otp to activate your account. "
-        + "One Time Password to activate:</p>"
-        + "<p><b>" + user.getOneTimePassword() + "</b></p>"
-        + "<br>"
-        + "<p>Note: This OTP is set to expire in 5 minutes.</p>";
-    	emailService.sendSimpleMessage(to, subject, text);     
+    	String subject = "Welcome to OrderMyFood! Verify Your Account";
+    	String text = "<p>Hello " + user.getFirstName() + "!"+ "</p>"
+        + "<p>&emsp;Please enter the following otp to activate your account. " + "</p>"
+        + "<p>&emsp;One Time Password : "
+        + "<b>" + user.getOneTimePassword() + "</b></p>"
+        + "<p>Note: This OTP is set to expire in <b>5</b> minutes.</p>";
+    	emailService.sendSimpleMessage(to, subject, text);
     }
 	
 	public ResponseEntity<String> verifyOtp(OTP otp) {
@@ -143,7 +141,7 @@ public class CustomerServiceImpl implements CustomerService
 	}
 
 	@Override
-	public ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException {
+	public ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException, MessagingException {
 		String email = forgotDto.getEmailId();
 		String token = RandomString.make(30);
 		Customer customer = customerRepository.findByEmailIdIgnoreCase(email);
@@ -157,7 +155,7 @@ public class CustomerServiceImpl implements CustomerService
 		return new ResponseEntity<>("Email sent Successfully", HttpStatus.OK);
 	}
 	
-	private void sendResetTokenEmail(String contextPath, String token, Customer customer) {
+	private void sendResetTokenEmail(String contextPath, String token, Customer customer) throws MessagingException {
 		String url = contextPath + "/customer/reset_password?token=" + token;
 		String message = "<p>Hello,</p>"
         + "<p>You have requested to reset your password.</p>"

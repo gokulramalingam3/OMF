@@ -76,8 +76,12 @@ public class VendorServiceImpl implements VendorService {
 	public void sendOTPEmail(Vendor user)
             throws UnsupportedEncodingException, MessagingException {
     	String to = user.getEmailId();
-    	String subject = "Welcome to OrderMyFood";
-    	String text = "Hi "+ user.getFirstName()+ ", Please enter the following otp to activate your account. OTP: "+user.getOneTimePassword();
+    	String subject = "Welcome to OrderMyFood! Verify Your Account";
+    	String text = "<p>Hello " + user.getFirstName() + "!"+ "</p>"
+        + "<p>&emsp;Please enter the following otp to activate your account. " + "</p>"
+        + "<p>&emsp;One Time Password : "
+        + "<b>" + user.getOneTimePassword() + "</b></p>"
+        + "<p>Note: This OTP is set to expire in <b>5</b> minutes.</p>";
     	emailService.sendSimpleMessage(to, subject, text);     
     }
 	
@@ -140,7 +144,7 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException {
+	public ResponseEntity<String> processForgotPassword(HttpServletRequest httpServletRequest, ForgotDTO forgotDto) throws UserNotFoundException, MessagingException {
 		String email = forgotDto.getEmailId();
 		String token = RandomString.make(30);
 		Vendor vendor = vendorRepository.findByEmailIdIgnoreCase(email);
@@ -154,7 +158,7 @@ public class VendorServiceImpl implements VendorService {
 		return new ResponseEntity<>("Email sent Successfully", HttpStatus.OK);
 	}
 	
-	private void sendResetTokenEmail(String contextPath, String token, Vendor vendor) {
+	private void sendResetTokenEmail(String contextPath, String token, Vendor vendor) throws MessagingException {
 		String url = contextPath + "/vendor/reset_password?token=" + token;
 		String message = "<p>Hello,</p>"
         + "<p>You have requested to reset your password.</p>"
